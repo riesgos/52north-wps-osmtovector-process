@@ -5,7 +5,7 @@ These files can be obtained from the [geofabrik download server](https://downloa
 
 This process creates its own process repository and allows the configuration via the webbased administation interface:
 
-
+![](doc/repository-settings.png)
 
 ## Requirements
 
@@ -52,3 +52,10 @@ much as possible for the intended use. This can be accomplished using the excell
 ## Example WPS Excecute requests
 
 See the `doc/requests` directory of this repository.
+
+These XML files can be send to the WPS using `curl`:
+
+    curl -X POST \
+        -d @doc/requests/execute-dataset-list.xml \ 
+        -H "Content-Type: text/xml" \
+        http://localhost:8080/52n_wps_gt/WebProcessingService 

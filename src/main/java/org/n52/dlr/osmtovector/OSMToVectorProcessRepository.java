@@ -26,7 +26,7 @@ public class OSMToVectorProcessRepository implements IAlgorithmRepository {
     private ConfigurationModule cm;
 
     public OSMToVectorProcessRepository() {
-        LOGGER.info("Initializing OSMToVectorOld Repository");
+        LOGGER.info("Initializing OSMToVector Repository");
 
         algorithmMap = new HashMap<String, IAlgorithm>();
         processDescriptionMap = new HashMap<String, ProcessDescription>();

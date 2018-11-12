@@ -8,6 +8,7 @@ import org.n52.dlr.osmtovector.OSMToVectorProcessRepository;
 import org.n52.dlr.osmtovector.modules.OSMToVectorProcessRepositoryCM;
 import org.n52.dlr.osmtovector.util.FileUtil;
 import org.n52.dlr.osmtovector.util.GeoJSONFileCreator;
+import org.n52.dlr.osmtovector.util.OSMDatasetStore;
 import org.n52.wps.algorithm.annotation.*;
 import org.n52.wps.commons.WPSConfig;
 import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
@@ -42,7 +43,8 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
     private String osmExtractBinary = "osm_extract.py";
     private String exportType;
     private FeatureCollection<?, ?> features;
-    private String osmInputFileName;
+    private String osmStoreDirectory;
+    private String osmInputDataset;
     private File workDirectory;
 
     @LiteralDataInput(
@@ -79,6 +81,17 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
         this.exportType = exportType;
     }
 
+    @LiteralDataInput(
+            identifier = "dataset",
+            abstrakt = "Name of the OSM input dataset to use. Use the OSMDatasetList process to get a list",
+            minOccurs = 1,
+            maxOccurs = 1,
+            binding = LiteralStringBinding.class
+    )
+    public void setInputDatasetName(String datasetName) {
+        this.osmInputDataset = datasetName;
+    }
+
     @ComplexDataOutput(
             binding = GTVectorDataBinding.class,
             identifier = "exportedData"
@@ -98,8 +111,8 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
         );
 
         for (ConfigurationEntry cEntry: cm.getConfigurationEntries()) {
-           if (cEntry.getKey().equals(OSMToVectorProcessRepositoryCM.osmInputFileKey)) {
-               this.osmInputFileName = (String) cEntry.getValue();
+           if (cEntry.getKey().equals(OSMToVectorProcessRepositoryCM.osmStoreDirectoryKey)) {
+               this.osmStoreDirectory = (String) cEntry.getValue();
            } else if (cEntry.getKey().equals(OSMToVectorProcessRepositoryCM.osmExtractBinaryKey)) {
                this.osmExtractBinary = (String) cEntry.getValue();
            } else if (cEntry.getKey().equals(OSMToVectorProcessRepositoryCM.workDirectoryKey)) {
@@ -158,7 +171,13 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             }
 
             // input file
-            args.add(this.osmInputFileName);
+            try {
+                OSMDatasetStore store = new OSMDatasetStore(osmStoreDirectory);
+                args.add(store.getPathForDataset(osmInputDataset).toAbsolutePath().toString());
+            } catch (IOException e) {
+                LOGGER.error("Could not find input dataset '" + osmInputDataset + "'", e);
+                throw new ExceptionReport("Could not find input dataset '" + osmInputDataset + "'", "io", e);
+            }
 
             // output file
             args.add(new File(tmpdir, "out").getAbsolutePath());

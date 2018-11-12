@@ -2,6 +2,7 @@
 <wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
   <ows:Identifier>org.n52.dlr.osmtovector.algorithm.OSMToVector</ows:Identifier>
   <wps:DataInputs>
+
     <wps:Input>
       <ows:Identifier>spatialFilter</ows:Identifier>
       <wps:Data>
@@ -38,6 +39,14 @@
       }]]></wps:ComplexData>
       </wps:Data>
     </wps:Input>
+
+    <wps:Input>
+      <ows:Identifier>dataset</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>chile-highway</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+
     <wps:Input>
       <ows:Identifier>tag</ows:Identifier>
       <wps:Data>
@@ -50,12 +59,14 @@
         <wps:LiteralData>name</wps:LiteralData>
       </wps:Data>
     </wps:Input>
+
     <wps:Input>
       <ows:Identifier>exportType</ows:Identifier>
       <wps:Data>
         <wps:LiteralData>ways</wps:LiteralData>
       </wps:Data>
     </wps:Input>
+
   </wps:DataInputs>
   <wps:ResponseForm>
     <wps:RawDataOutput mimeType="application/x-zipped-shp">

@@ -1,6 +1,7 @@
 package org.n52.dlr.osmtovector.modules;
 
 import org.n52.dlr.osmtovector.OSMToVectorProcessRepository;
+import org.n52.dlr.osmtovector.algorithm.OSMDatasetList;
 import org.n52.dlr.osmtovector.algorithm.OSMToVector;
 import org.n52.wps.webapp.api.AlgorithmEntry;
 import org.n52.wps.webapp.api.ClassKnowingModule;
@@ -23,16 +24,16 @@ public class OSMToVectorProcessRepositoryCM extends ClassKnowingModule {
 
     private boolean isActive = true;
 
-    public static final String osmInputFileKey = "osm_input_file";
+    public static final String osmStoreDirectoryKey = "osm_store_directory";
     public static final String osmExtractBinaryKey = "osm_extract_binary";
     public static final String workDirectoryKey = "work_directory";
 
     private ConfigurationEntry<String> osmInputFileEntry = new StringConfigurationEntry(
-            osmInputFileKey,
-            "OSM Input file",
-            "The OSM input file to extract from. Should be something in PBF format.",
+            osmStoreDirectoryKey,
+            "OSM Input directory",
+            "The directory containing the OSM input files. Only files ending with '.osm.pdf' will be used.",
             true,
-            "/tmp/does-not-exist.pbf"
+            "/tmp"
     );
 
     private ConfigurationEntry<String> osmExtractBinaryEntry = new StringConfigurationEntry(
@@ -60,6 +61,7 @@ public class OSMToVectorProcessRepositoryCM extends ClassKnowingModule {
     public OSMToVectorProcessRepositoryCM() {
         algorithmEntries = new ArrayList<>();
         algorithmEntries.add(new AlgorithmEntry(OSMToVector.class.getName(), true)); // TODO: add only when missing
+        algorithmEntries.add(new AlgorithmEntry(OSMDatasetList.class.getName(), true));
     }
 
     @Override
