@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:Execute version="1.0.0" service="WPS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/wps/1.0.0" xmlns:wfs="http://www.opengis.net/wfs" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:ogc="http://www.opengis.net/ogc" xmlns:wcs="http://www.opengis.net/wcs/1.1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+  <ows:Identifier>org.n52.dlr.osmtovector.algorithm.OSMToVector</ows:Identifier>
+  <wps:DataInputs>
+    <wps:Input>
+      <ows:Identifier>spatialFilter</ows:Identifier>
+      <wps:Data>
+        <wps:ComplexData mimeType="application/vnd.geo+json"><![CDATA[{
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -70.20263671875,
+              -23.73004055946544
+            ],
+            [
+              -70.13671875,
+              -23.50355189742412
+            ],
+            [
+              -70.3509521484375,
+              -23.508589226762282
+            ],
+            [
+              -70.52673339843744,
+              -23.68980454142959
+            ],
+            [
+              -70.455322265625,
+              -23.90090491303774
+            ],
+            [
+              -70.20263671875,
+              -23.73004055946544
+            ]
+          ]
+        ]
+      }]]></wps:ComplexData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>tag</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>highway</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>tag</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>name</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    <wps:Input>
+      <ows:Identifier>exportType</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData>ways</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+  </wps:DataInputs>
+  <wps:ResponseForm>
+    <wps:RawDataOutput mimeType="application/x-zipped-shp">
+      <ows:Identifier>exportedData</ows:Identifier>
+    </wps:RawDataOutput>
+  </wps:ResponseForm>
+</wps:Execute>
