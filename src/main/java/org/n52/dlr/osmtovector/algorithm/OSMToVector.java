@@ -5,10 +5,10 @@ import org.geotools.data.DataStore;
 import org.geotools.data.shapefile.ShapefileDataStore;
 import org.geotools.feature.FeatureCollection;
 import org.n52.dlr.osmtovector.OSMToVectorProcessRepository;
-import org.n52.dlr.osmtovector.modules.OSMToVectorProcessRepositoryCM;
-import org.n52.dlr.osmtovector.io.FileUtil;
 import org.n52.dlr.osmtovector.io.GeoJSONFileCreator;
+import org.n52.dlr.osmtovector.io.IOUtil;
 import org.n52.dlr.osmtovector.io.OSMDatasetStore;
+import org.n52.dlr.osmtovector.modules.OSMToVectorProcessRepositoryCM;
 import org.n52.wps.algorithm.annotation.*;
 import org.n52.wps.commons.WPSConfig;
 import org.n52.wps.io.data.binding.complex.GTVectorDataBinding;
@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 
 @Algorithm(
@@ -46,6 +45,10 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
     private String osmStoreDirectory;
     private String osmInputDataset;
     private File workDirectory;
+
+    public OSMToVector() {
+        super();
+    }
 
     @LiteralDataInput(
             identifier = "tag",
@@ -98,10 +101,6 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
     )
     public FeatureCollection getExportedData() {
         return features;
-    }
-
-    public OSMToVector() {
-        super();
     }
 
     private void setConfiguration() {
@@ -195,8 +194,7 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
                 if (returnCode != 0) {
                     // get the stderr of the command and write it
                     // to the logfile for problem diagnosis.
-                    Scanner scanner = new Scanner(proc.getErrorStream()).useDelimiter("\\A");
-                    String errOutput = scanner.hasNext() ? scanner.next() : "";
+                    String errOutput = IOUtil.readInputStreamIntoString(proc.getErrorStream());
                     LOGGER.error("subprocess failed with returncode " + returnCode + ": " + errOutput);
 
                     throw new ExceptionReport("subprocess failed", "internal");
@@ -218,7 +216,7 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
         } finally {
             if (tmpdir != null) {
                 if (tmpdir.exists()) {
-                    FileUtil.recursiveDelete(tmpdir);
+                    IOUtil.recursiveDelete(tmpdir);
                 }
             }
         }

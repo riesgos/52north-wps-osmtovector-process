@@ -12,10 +12,9 @@ import java.util.Map;
 
 public class OSMDatasetStore {
 
+    public static String fileNameExtension = ".osm.pbf";
     private Path directory;
     private Map<String, Path> datasetMap = new HashMap<>();
-
-    public static String fileNameExtension = ".osm.pbf";
 
     public OSMDatasetStore(String directory) throws IOException {
         this.directory = Paths.get(directory);
