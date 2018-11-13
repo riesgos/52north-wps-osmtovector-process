@@ -59,3 +59,10 @@ These XML files can be send to the WPS using `curl`:
         -d @doc/requests/execute-dataset-list.xml \ 
         -H "Content-Type: text/xml" \
         http://localhost:8080/52n_wps_gt/WebProcessingService 
+
+
+# Legal and Licensing
+
+This software is licensed under the [Apache 2.0 License](LICENSE.txt).
+
+(c) 2018 German Aerospace Center (DLR); German Remote Sensing Data Center; Department: Geo-Risks and Civil Security
