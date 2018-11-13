@@ -39,7 +39,7 @@ public class OSMDatasetList extends AbstractAnnotatedAlgorithm {
             binding = LiteralStringBinding.class
     )
     public String getDatasets() {
-        return String.join(", ", providedDatasets);
+        return String.join(",", providedDatasets);
     }
 
     private void setConfiguration() {
