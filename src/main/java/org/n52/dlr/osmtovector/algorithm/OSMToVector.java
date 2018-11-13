@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -206,7 +208,10 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             Runtime rt = Runtime.getRuntime();
             String[] argArr = new String[args.size()];
             argArr = args.toArray(argArr);
-            LOGGER.info("Executing " + String.join(" ", argArr));
+            String printableCommand = String.join(" ", argArr);
+            LOGGER.info("Executing {}", printableCommand);
+
+            Instant procStart = Instant.now();
             Process proc = rt.exec(argArr, new String[0], tmpdir);
 
             // wait for subprocess to finish
@@ -225,6 +230,10 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
                 throw new ExceptionReport("Error handling processing request: subprocess was interrupted", "internal");
             } finally {
                 proc.destroy();
+
+                LOGGER.info("subprocess \"{}\" took {} seconds to execute",
+                        printableCommand,
+                        Duration.between(procStart, Instant.now()).toMillis() / 1000.0);
             }
 
             // get result from disk
