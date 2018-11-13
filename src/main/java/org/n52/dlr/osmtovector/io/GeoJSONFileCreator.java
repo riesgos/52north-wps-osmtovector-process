@@ -1,4 +1,4 @@
-package org.n52.dlr.osmtovector.util;
+package org.n52.dlr.osmtovector.io;
 
 import com.vividsolutions.jts.geom.Geometry;
 import org.geotools.feature.DefaultFeatureCollection;

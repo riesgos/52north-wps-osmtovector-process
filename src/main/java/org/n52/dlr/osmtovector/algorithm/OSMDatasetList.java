@@ -2,7 +2,7 @@ package org.n52.dlr.osmtovector.algorithm;
 
 import org.n52.dlr.osmtovector.OSMToVectorProcessRepository;
 import org.n52.dlr.osmtovector.modules.OSMToVectorProcessRepositoryCM;
-import org.n52.dlr.osmtovector.util.OSMDatasetStore;
+import org.n52.dlr.osmtovector.io.OSMDatasetStore;
 import org.n52.wps.algorithm.annotation.Algorithm;
 import org.n52.wps.algorithm.annotation.Execute;
 import org.n52.wps.algorithm.annotation.LiteralDataOutput;

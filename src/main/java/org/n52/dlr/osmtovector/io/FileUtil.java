@@ -1,4 +1,4 @@
-package org.n52.dlr.osmtovector.util;
+package org.n52.dlr.osmtovector.io;
 
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;

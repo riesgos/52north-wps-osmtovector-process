@@ -1,4 +1,4 @@
-package org.n52.dlr.osmtovector.util;
+package org.n52.dlr.osmtovector.io;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -35,7 +35,7 @@ public class OSMDatasetStore {
     }
 
     public Path getPathForDataset(String datasetName) throws IOException {
-        Path path = Paths.get(this.directory, datasetName.replaceAll("/", "") + fileNameExtension);
+        Path path = Paths.get(this.directory, datasetName.replace("/", "").replace("\\", "") + fileNameExtension);
         if (!path.toFile().isFile()) {
             throw new IOException("OSM dataset with the name " + datasetName + " does not exist");
         }
