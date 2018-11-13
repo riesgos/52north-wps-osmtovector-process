@@ -31,16 +31,18 @@ import java.util.List;
 
 @Algorithm(
         version="1.0.0",
-        title="OSMToVector"
+        title="OSMToVector",
+        abstrakt = "Extract a subset of an OSM dataset"
 )
 public class OSMToVector extends AbstractAnnotatedAlgorithm {
 
     private static Logger LOGGER = LoggerFactory.getLogger(OSMToVector.class);
     private List<String> tags;
     private Geometry spatialFilter;
-    private String layerName = "export";
+    private String exportLayerName = "export";
+    private String exportFileName = "out";
     private String osmExtractBinary = "osm_extract.py";
-    private String exportType;
+    private String elementType;
     private FeatureCollection<?, ?> features;
     private String osmStoreDirectory;
     private String osmInputDataset;
@@ -73,15 +75,15 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
     }
 
     @LiteralDataInput(
-            identifier = "exportType",
-            abstrakt = "Type of OSM data to export. Possible values are 'nodes' and 'ways'.",
+            identifier = "elementType",
+            abstrakt = "Type of OSM elements to export. Supported values are 'nodes' and 'ways'.",
             minOccurs = 0,
             maxOccurs = 1,
             defaultValue = "nodes",
             binding = LiteralStringBinding.class
     )
-    public void setTypeToExport(String exportType){
-        this.exportType = exportType;
+    public void setElementsToExport(String elementType){
+        this.elementType = elementType;
     }
 
     @LiteralDataInput(
@@ -131,7 +133,7 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             List<String> args = new ArrayList<>();
             args.add(this.osmExtractBinary);
             args.add("-l");
-            args.add(layerName);
+            args.add(exportLayerName);
 
             if (!tags.isEmpty()) {
                 args.add("-t");
@@ -143,18 +145,19 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             args.add("-f");
             args.add("ESRI Shapefile");
 
-            if (exportType.contentEquals("nodes")) {
+            if (elementType.contentEquals("nodes")) {
                 // the default - nothing to do
-            } else if (exportType.contentEquals("ways")) {
+            } else if (elementType.contentEquals("ways")) {
                 args.add("--ways");
                 args.add("--length");
             } else {
                 throw new ExceptionReport(
-                        "Unsupported export type: " + spatialFilter.getGeometryType()
+                        "Unsupported elementType: " + elementType
                                 + ". Supported are 'ways', 'nodes'",
                         "invalid-args");
             }
 
+            // set the spatial filter if there is one
             if (spatialFilter != null) {
                 if (!spatialFilter.getGeometryType().equals("Polygon") && !spatialFilter.getGeometryType().equals("MultiPolygon")) {
                     throw new ExceptionReport(
@@ -179,7 +182,7 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             }
 
             // output file
-            args.add(new File(tmpdir, "out").getAbsolutePath());
+            args.add(new File(tmpdir, exportFileName).getAbsolutePath());
 
             Runtime rt = Runtime.getRuntime();
             String[] argArr = new String[args.size()];
@@ -187,15 +190,14 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
             LOGGER.info("Executing " + String.join(" ", argArr));
             Process proc = rt.exec(argArr, new String[0], tmpdir);
 
-            // wait for algorithm to finish
+            // wait for subprocess to finish
             try {
                 int returnCode = proc.waitFor();
 
                 if (returnCode != 0) {
-                    // get the stderr of the command and write it
-                    // to the logfile for problem diagnosis.
+                    // get the stderr of the command and write it to the logfile for problem diagnosis.
                     String errOutput = IOUtil.readInputStreamIntoString(proc.getErrorStream());
-                    LOGGER.error("subprocess failed with returncode " + returnCode + ": " + errOutput);
+                    LOGGER.error("subprocess failed with returncode " + returnCode + ":\n" + errOutput);
 
                     throw new ExceptionReport("subprocess failed", "internal");
                 }
@@ -206,8 +208,8 @@ public class OSMToVector extends AbstractAnnotatedAlgorithm {
                 proc.destroy();
             }
 
-            // get result
-            DataStore store = new ShapefileDataStore(new File(tmpdir, "out/" + layerName + ".shp").toURI().toURL());
+            // get result from disk
+            DataStore store = new ShapefileDataStore(new File(tmpdir, exportFileName + "/" + exportLayerName + ".shp").toURI().toURL());
             features = store.getFeatureSource(store.getTypeNames()[0]).getFeatures();
 
         } catch (IOException e) {

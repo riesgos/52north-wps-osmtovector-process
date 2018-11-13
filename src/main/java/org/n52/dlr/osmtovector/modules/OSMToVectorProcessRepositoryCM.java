@@ -18,16 +18,12 @@ import java.util.List;
 
 public class OSMToVectorProcessRepositoryCM extends ClassKnowingModule {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OSMToVectorProcessRepositoryCM.class);
-
-    private List<AlgorithmEntry> algorithmEntries;
-
-    private boolean isActive = true;
-
     public static final String osmStoreDirectoryKey = "osm_store_directory";
     public static final String osmExtractBinaryKey = "osm_extract_binary";
     public static final String workDirectoryKey = "work_directory";
-
+    private static Logger LOGGER = LoggerFactory.getLogger(OSMToVectorProcessRepositoryCM.class);
+    private List<AlgorithmEntry> algorithmEntries;
+    private boolean isActive = true;
     private ConfigurationEntry<String> osmInputFileEntry = new StringConfigurationEntry(
             osmStoreDirectoryKey,
             "OSM Input directory",

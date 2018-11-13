@@ -24,7 +24,6 @@ public class OSMDatasetStore {
     public void scanDirectory() throws IOException {
         datasetMap.clear();
 
-        List<String> providedDatasets = new ArrayList<>();
         DirectoryStream<Path> stream = Files.newDirectoryStream(this.directory, "*"+ fileNameExtension);
         for (Path path: stream) {
             datasetMap.put(getDatasetName(path), path);
@@ -33,7 +32,7 @@ public class OSMDatasetStore {
 
     private String getDatasetName(Path path) {
         return path.getName(path.getNameCount()-1).toString()
-                .replaceAll(fileNameExtension, "")
+                .replace(fileNameExtension, "")
                 .replaceAll("[^a-zA-Z0-9\\.\\-_]", "");
     }
 

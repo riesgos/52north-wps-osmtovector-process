@@ -61,7 +61,7 @@
     </wps:Input>
 
     <wps:Input>
-      <ows:Identifier>exportType</ows:Identifier>
+      <ows:Identifier>elementType</ows:Identifier>
       <wps:Data>
         <wps:LiteralData>ways</wps:LiteralData>
       </wps:Data>

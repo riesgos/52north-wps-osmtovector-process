@@ -28,8 +28,8 @@ public class OSMToVectorProcessRepository implements IAlgorithmRepository {
     public OSMToVectorProcessRepository() {
         LOGGER.info("Initializing OSMToVector Repository");
 
-        algorithmMap = new HashMap<String, IAlgorithm>();
-        processDescriptionMap = new HashMap<String, ProcessDescription>();
+        algorithmMap = new HashMap<>();
+        processDescriptionMap = new HashMap<>();
 
         cm = WPSConfig.getInstance().getConfigurationModuleForClass(
                 this.getClass().getName(),
@@ -42,15 +42,13 @@ public class OSMToVectorProcessRepository implements IAlgorithmRepository {
                     addAlgorithm(algorithmEntry.getAlgorithm());
                 }
             }
-
         } else {
             LOGGER.info("repository is inactive");
         }
     }
 
     private IAlgorithm loadAlgorithm(String algorithmClassName) throws Exception {
-        Class<?> algorithmClass = OSMToVectorProcessRepository.class
-                .getClassLoader().loadClass(algorithmClassName);
+        Class<?> algorithmClass = OSMToVectorProcessRepository.class.getClassLoader().loadClass(algorithmClassName);
         IAlgorithm algorithm = null;
         if (IAlgorithm.class.isAssignableFrom(algorithmClass)) {
             algorithm = IAlgorithm.class.cast(algorithmClass.newInstance());
@@ -73,10 +71,8 @@ public class OSMToVectorProcessRepository implements IAlgorithmRepository {
         }
 
         if (isNoProcessDescriptionValid) {
-            LOGGER.warn("Algorithm description is not valid: "
-                    + algorithmClassName);// TODO add version to exception/log
-            throw new Exception("Could not load algorithm "
-                    + algorithmClassName + ". ProcessDescription Not Valid.");
+            LOGGER.warn("Algorithm description is not valid: " + algorithmClassName);
+            throw new Exception("Could not load algorithm " + algorithmClassName + ". ProcessDescription Not Valid.");
         }
         return algorithm;
     }
@@ -88,20 +84,15 @@ public class OSMToVectorProcessRepository implements IAlgorithmRepository {
         String algorithmClassName = (String) processID;
 
         try {
-
             IAlgorithm algorithm = loadAlgorithm(algorithmClassName);
 
-            processDescriptionMap.put(algorithmClassName,
-                    algorithm.getDescription());
+            processDescriptionMap.put(algorithmClassName, algorithm.getDescription());
             algorithmMap.put(algorithmClassName, algorithm);
             LOGGER.info("Algorithm class registered: " + algorithmClassName);
 
             return true;
         } catch (Exception e) {
-            LOGGER.error("Exception while trying to add algorithm {}",
-                    algorithmClassName);
-            LOGGER.error(e.getMessage());
-
+            LOGGER.error("Exception while trying to add algorithm " + algorithmClassName, e);
         }
         return false;
     }
